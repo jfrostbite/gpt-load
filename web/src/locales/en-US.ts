@@ -276,8 +276,17 @@ export default {
       "Complete URL of the API server. Multiple upstreams enable load balancing and failover for high availability",
     weightTooltip:
       "Load balancing weight configuration. Weight determines traffic distribution ratio - higher values receive more traffic. Weight 0 disables the upstream (no requests). Example: Weight 2:1 means the first receives ~67% of traffic",
+    removeParams: "Remove Params",
+    removeParamsTooltip:
+      "Remove specific top-level fields from request body before forwarding. Separate keys by comma/space/semicolon/pipe. Example: model,stream",
+    toolsOverride: "Tools override/merge",
+    toolsOverrideTooltip:
+      "When enabled, merge tools by name or function.name: replace if exists, append if missing. Other fields still follow param override logic",
     addUpstream: "Add Upstream",
     groupConfig: "Group Configuration",
+    multimodalOnly: "Multimodal-only messaging",
+    multimodalOnlyTooltip:
+      "When enabled, string content will be normalized to multimodal array items for content and messages[].content",
     groupConfigTooltip:
       "Group-specific configuration parameters like timeout, retry count, etc. These settings override global defaults",
     config: "Config",

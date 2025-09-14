@@ -276,8 +276,17 @@ export default {
       "APIサーバーの完全なURL。複数のアップストリームにより高可用性のためのロードバランシングとフェイルオーバーが可能",
     weightTooltip:
       "ロードバランシング重み設定。重みはトラフィック分配比率を決定し、値が高いほど多くのトラフィックを受信します。重み0はアップストリームを無効化（リクエストなし）。例：重み2:1は前者が約67%のトラフィックを受信",
+    removeParams: "パラメータ削除",
+    removeParamsTooltip:
+      "転送前にリクエストボディのトップレベルのフィールドを削除します。複数のキーはカンマ/空白/セミコロン/パイプで区切ります。例：model,stream",
+    toolsOverride: "Tools 上書き/マージ",
+    toolsOverrideTooltip:
+      "有効にすると、name または function.name で tools をマージ：同名は置換、存在しなければ追加。他のフィールドは従来のパラメータ上書きを適用",
     addUpstream: "アップストリーム追加",
     groupConfig: "グループ設定",
+    multimodalOnly: "マルチモーダルのみ",
+    multimodalOnlyTooltip:
+      "有効にすると、文字列のcontentはマルチモーダル配列に正規化され、content および messages[].content に適用されます",
     groupConfigTooltip:
       "タイムアウト、リトライ回数などのグループ固有の設定パラメーター。これらの設定はグローバルデフォルトを上書きします",
     config: "設定",

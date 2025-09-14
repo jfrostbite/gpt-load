@@ -38,6 +38,12 @@ type GroupConfig struct {
 	KeyValidationConcurrency     *int    `json:"key_validation_concurrency,omitempty"`
 	KeyValidationTimeoutSeconds  *int    `json:"key_validation_timeout_seconds,omitempty"`
 	EnableRequestBodyLogging     *bool   `json:"enable_request_body_logging,omitempty"`
+	MultimodalOnly               *bool   `json:"multimodal_only,omitempty"`
+	RemoveParams                 *string `json:"remove_params,omitempty"`
+	ToolsOverride                *bool   `json:"tools_override,omitempty"`
+	StreamAdapter                *string `json:"stream_adapter,omitempty"`
+	StreamAdapterAnthropic       *bool   `json:"stream_adapter_anthropic,omitempty"`
+	RemoveEmptyTextInMultimodal  *bool   `json:"remove_empty_text_in_multimodal,omitempty"`
 }
 
 // HeaderRule defines a single rule for header manipulation.

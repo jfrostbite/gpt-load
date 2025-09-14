@@ -33,6 +33,12 @@ type SystemSettings struct {
 	MaxIdleConns          int    `json:"max_idle_conns" default:"100" name:"config.max_idle_conns" category:"config.category.request" desc:"config.max_idle_conns_desc" validate:"required,min=1"`
 	MaxIdleConnsPerHost   int    `json:"max_idle_conns_per_host" default:"50" name:"config.max_idle_conns_per_host" category:"config.category.request" desc:"config.max_idle_conns_per_host_desc" validate:"required,min=1"`
 	ProxyURL              string `json:"proxy_url" name:"config.proxy_url" category:"config.category.request" desc:"config.proxy_url_desc"`
+	MultimodalOnly        bool   `json:"multimodal_only" default:"false" name:"config.multimodal_only" category:"config.category.request" desc:"config.multimodal_only_desc"`
+	RemoveParams          string `json:"remove_params" default:"" name:"config.remove_params" category:"config.category.request" desc:"config.remove_params_desc"`
+	ToolsOverride         bool   `json:"tools_override" default:"false" name:"config.tools_override" category:"config.category.request" desc:"config.tools_override_desc"`
+	StreamAdapter         string `json:"stream_adapter" default:"" name:"config.stream_adapter" category:"config.category.request" desc:"config.stream_adapter_desc"`
+	StreamAdapterAnthropic bool  `json:"stream_adapter_anthropic" default:"false" name:"config.stream_adapter_anthropic" category:"config.category.request" desc:"config.stream_adapter_anthropic_desc"`
+	RemoveEmptyTextInMultimodal bool `json:"remove_empty_text_in_multimodal" default:"false" name:"config.remove_empty_text_in_multimodal" category:"config.category.request" desc:"config.remove_empty_text_in_multimodal_desc"`
 
 	// 密钥配置
 	MaxRetries                   int `json:"max_retries" default:"3" name:"config.max_retries" category:"config.category.key" desc:"config.max_retries_desc" validate:"required,min=0"`

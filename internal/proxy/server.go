@@ -10,6 +10,7 @@ import (
 	"io"
 	"net/http"
 	"time"
+	"strings"
 
 	"gpt-load/internal/channel"
 	"gpt-load/internal/config"
@@ -149,6 +150,24 @@ func (ps *ProxyServer) executeRequestWithRetry(
 		utils.ApplyHeaderRules(req, group.HeaderRuleList, headerCtx)
 	}
 
+	if cfg.EnableRequestBodyLogging {
+		sh := map[string][]string{}
+		for k, v := range req.Header {
+			kl := strings.ToLower(k)
+			if kl == "authorization" || kl == "x-api-key" || kl == "api-key" || kl == "x-goog-api-key" {
+				sh[k] = []string{"***"}
+			} else {
+				sh[k] = v
+			}
+		}
+		logrus.WithFields(logrus.Fields{
+			"method":  req.Method,
+			"url":     upstreamURL,
+			"headers": sh,
+		}).Debug("upstream.request")
+		logrus.WithField("body", utils.TruncateString(string(bodyBytes), 65000)).Debug("upstream.request.body")
+	}
+
 	var client *http.Client
 	if isStream {
 		client = channelHandler.GetStreamClient()
@@ -160,6 +179,12 @@ func (ps *ProxyServer) executeRequestWithRetry(
 	resp, err := client.Do(req)
 	if resp != nil {
 		defer resp.Body.Close()
+	}
+	if err == nil && resp != nil {
+		logrus.WithFields(logrus.Fields{
+			"status":  resp.StatusCode,
+			"headers": resp.Header,
+		}).Debug("upstream.response")
 	}
 
 	// Unified error handling for retries. Exclude 404 from being a retryable error.
@@ -230,11 +255,18 @@ func (ps *ProxyServer) executeRequestWithRetry(
 		}
 	}
 	c.Status(resp.StatusCode)
-
-	if isStream {
+	logrus.Infof("Content-Type %s request logs.", resp.Header.Get("Content-Type"))
+	if strings.Contains(resp.Header.Get("Content-Type"), "text/event-stream") {
 		ps.handleStreamingResponse(c, resp)
 	} else {
+		var rbuf bytes.Buffer
+		if cfg.EnableRequestBodyLogging {
+			resp.Body = io.NopCloser(io.TeeReader(resp.Body, &rbuf))
+		}
 		ps.handleNormalResponse(c, resp)
+		if cfg.EnableRequestBodyLogging {
+			logrus.WithField("body", utils.TruncateString(rbuf.String(), 65000)).Debug("upstream.response.body")
+		}
 	}
 
 	ps.logRequest(c, group, apiKey, startTime, resp.StatusCode, nil, isStream, upstreamURL, channelHandler, bodyBytes, models.RequestTypeFinal)

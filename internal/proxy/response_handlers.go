@@ -21,24 +21,35 @@ func (ps *ProxyServer) handleStreamingResponse(c *gin.Context, resp *http.Respon
 		return
 	}
 
-	buf := make([]byte, 4*1024)
-	for {
-		n, err := resp.Body.Read(buf)
-		if n > 0 {
-			if _, writeErr := c.Writer.Write(buf[:n]); writeErr != nil {
-				logUpstreamError("writing stream to client", writeErr)
+	groupName := c.Param("group_name")
+	group, _ := ps.groupManager.GetGroupByName(groupName)
+	if adapter := ps.selectStreamAdapter(group); adapter != nil {
+		adapter.Adapt(c, resp, flusher)
+		return
+	}
+
+	if true {
+		buf := make([]byte, 4*1024)
+		for {
+			n, err := resp.Body.Read(buf)
+			if n > 0 {
+				if _, writeErr := c.Writer.Write(buf[:n]); writeErr != nil {
+					logUpstreamError("writing stream to client", writeErr)
+					return
+				}
+				flusher.Flush()
+			}
+			if err == io.EOF {
+				break
+			}
+			if err != nil {
+				logUpstreamError("reading from upstream", err)
 				return
 			}
-			flusher.Flush()
 		}
-		if err == io.EOF {
-			break
-		}
-		if err != nil {
-			logUpstreamError("reading from upstream", err)
-			return
-		}
+		return
 	}
+
 }
 
 func (ps *ProxyServer) handleNormalResponse(c *gin.Context, resp *http.Response) {

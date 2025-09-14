@@ -101,6 +101,11 @@ const configOptions = ref<GroupConfigOption[]>([]);
 const channelTypesFetched = ref(false);
 const configOptionsFetched = ref(false);
 
+const streamAdapterOptions = ref([
+  { label: "Anthropic", value: "anthropic" },
+  { label: "OpenAI", value: "openai" },
+]);
+
 // 跟踪用户是否已手动修改过字段（仅在新增模式下使用）
 const userModifiedFields = ref({
   test_model: false,
@@ -264,7 +269,6 @@ function resetForm() {
   const isCreateMode = !props.group;
   const defaultChannelType = "openai";
 
-  // 先设置渠道类型，这样 computed 属性能正确计算默认值
   formData.channel_type = defaultChannelType;
 
   Object.assign(formData, {
@@ -288,7 +292,6 @@ function resetForm() {
     proxy_keys: "",
   });
 
-  // 重置用户修改状态追踪
   if (isCreateMode) {
     userModifiedFields.value = {
       test_model: false,
@@ -466,8 +469,10 @@ async function handleSubmit() {
         if (option && typeof option.default_value === "number" && typeof item.value === "string") {
           const numValue = Number(item.value);
           config[item.key] = isNaN(numValue) ? 0 : numValue;
+        } else if (item.key === "stream_adapter" && ((item as any).value === null || (item as any).value === undefined)) {
+          config[item.key] = "";
         } else {
-          config[item.key] = item.value;
+          config[item.key] = item.value as any;
         }
       }
     });
@@ -870,6 +875,13 @@ async function handleSubmit() {
                               v-else-if="typeof configItem.value === 'boolean'"
                               v-model:value="configItem.value"
                               size="small"
+                            />
+                            <n-select
+                              v-else-if="configItem.key === 'stream_adapter'"
+                              v-model:value="(configItem as any).value"
+                              :options="streamAdapterOptions"
+                              clearable
+                              :placeholder="t('keys.paramValue')"
                             />
                             <n-input
                               v-else

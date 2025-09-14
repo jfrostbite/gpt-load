@@ -137,6 +137,18 @@ var MessagesEnUS = map[string]string{
 	"config.max_idle_conns_per_host_desc": "Maximum number of idle connections allowed per upstream host in the HTTP client connection pool.",
 	"config.proxy_url":                    "Proxy Server URL",
 	"config.proxy_url_desc":               "Global HTTP/HTTPS proxy server URL, e.g., http://user:pass@host:port. If empty, uses environment variable configuration.",
+	"config.multimodal_only":             "Multimodal-only messaging",
+	"config.multimodal_only_desc":        "Normalize string content to multimodal array for content and messages[].content",
+	"config.remove_params":               "Remove Params",
+	"config.remove_params_desc":          "Remove specific top-level fields from request body before forwarding. Separate keys by comma/space/semicolon/pipe/slash",
+	"config.tools_override":              "Tools override/merge",
+	"config.tools_override_desc":         "Merge tools by name or function.name from Param Overrides: replace if exists, append if missing",
+	"config.stream_adapter":               "Stream adapter",
+	"config.stream_adapter_desc":          "Select a stream adapter to transform upstream SSE to a target format (leave empty to passthrough)",
+	"config.stream_adapter_anthropic":     "Adapt upstream SSE to Anthropic format",
+	"config.stream_adapter_anthropic_desc":"Backward-compat flag; prefer using 'Stream adapter' dropdown",
+	"config.remove_empty_text_in_multimodal": "Drop empty text blocks in multimodal",
+	"config.remove_empty_text_in_multimodal_desc": "When a content array contains non-text blocks, remove any text blocks whose text is empty or whitespace to satisfy upstream validation",
 
 	// Key config related
 	"config.max_retries":                     "Max Retries",

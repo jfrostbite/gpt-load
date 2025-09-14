@@ -97,6 +97,7 @@ func (ch *AnthropicChannel) ValidateKey(ctx context.Context, apiKey *models.APIK
 			{"role": "user", "content": "hi"},
 		},
 	}
+	ch.applyParamOverridesForValidation(payload, group)
 	body, err := json.Marshal(payload)
 	if err != nil {
 		return false, fmt.Errorf("failed to marshal validation payload: %w", err)

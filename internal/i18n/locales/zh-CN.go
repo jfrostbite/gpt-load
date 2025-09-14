@@ -137,6 +137,18 @@ var MessagesZhCN = map[string]string{
 	"config.max_idle_conns_per_host_desc": "HTTP 客户端连接池对每个上游主机允许的最大空闲连接数。",
 	"config.proxy_url":                    "代理服务器地址",
 	"config.proxy_url_desc":               "全局 HTTP/HTTPS 代理服务器地址，例如：http://user:pass@host:port。如果为空，则使用环境变量配置。",
+	"config.multimodal_only":             "仅支持多模态消息",
+	"config.multimodal_only_desc":        "将字符串内容规范化为多模态数组，应用于 content 与 messages[].content",
+	"config.remove_params":               "删除请求参数",
+	"config.remove_params_desc":          "在转发前删除请求体中的顶层字段，多个键用逗号/空格/分号/管道/斜杠分隔",
+	"config.tools_override":              "Tools 覆盖合并",
+	"config.tools_override_desc":         "从参数覆盖中按 name 或 function.name 合并 tools：同名替换，不存在则追加",
+	"config.stream_adapter":               "流式适配器",
+	"config.stream_adapter_desc":          "选择一个适配器将上游 SSE 转换为目标格式（留空为透传）",
+	"config.stream_adapter_anthropic":     "流式适配为 Anthropic 格式",
+	"config.stream_adapter_anthropic_desc":"兼容旧开关，推荐使用“流式适配器”下拉",
+	"config.remove_empty_text_in_multimodal": "多模态中移除空文本块",
+	"config.remove_empty_text_in_multimodal_desc": "当 content 数组包含非 text 块时，移除 text 但内容为空/全空白的块，以满足上游校验",
 
 	// Key config related
 	"config.max_retries":                     "最大重试次数",

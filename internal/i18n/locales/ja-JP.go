@@ -137,6 +137,18 @@ var MessagesJaJP = map[string]string{
 	"config.max_idle_conns_per_host_desc": "HTTPクライアント接続プールで各上流ホストに許可される最大アイドル接続数。",
 	"config.proxy_url":                    "プロキシサーバーURL",
 	"config.proxy_url_desc":               "グローバルHTTP/HTTPSプロキシサーバーURL。例：http://user:pass@host:port。空の場合は環境変数設定を使用。",
+	"config.multimodal_only":             "マルチモーダルのみ",
+	"config.multimodal_only_desc":        "content および messages[].content の文字列をマルチモーダル配列に正規化",
+	"config.remove_params":               "パラメータ削除",
+	"config.remove_params_desc":          "転送前にリクエストボディのトップレベルのフィールドを削除。複数キーはカンマ/空白/セミコロン/パイプ/スラッシュ区切り",
+	"config.tools_override":              "Tools 上書き/マージ",
+	"config.tools_override_desc":         "パラメータ上書きから name または function.name で tools をマージ：同名は置換、存在しなければ追加",
+	"config.stream_adapter":               "ストリームアダプター",
+	"config.stream_adapter_desc":          "上流SSEをターゲット形式に変換するアダプターを選択（空は透過）",
+	"config.stream_adapter_anthropic":     "SSEをAnthropic形式に適応",
+	"config.stream_adapter_anthropic_desc":"後方互換のフラグ。今後は「ストリームアダプター」ドロップダウンを使用",
+	"config.remove_empty_text_in_multimodal": "マルチモーダルで空のテキストブロックを削除",
+	"config.remove_empty_text_in_multimodal_desc": "content 配列に非テキストブロックが含まれる場合、テキストが空/空白の text ブロックを削除し、上流のバリデーションに適合させます",
 
 	// Key config related
 	"config.max_retries":                     "最大リトライ数",

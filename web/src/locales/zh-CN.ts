@@ -270,8 +270,17 @@ export default {
     upstreamTooltip: "API服务器的完整URL地址。多个上游可以实现负载均衡和故障转移，提高服务可用性",
     weightTooltip:
       "负载均衡权重配置。权重决定流量分配比例，数值越大获得的流量越多。权重为0时禁用该上游（不接收任何请求）。示例：权重2:1表示前者获得约67%的流量",
+    removeParams: "删除请求参数",
+    removeParamsTooltip:
+      "在转发前删除请求体中的顶层字段，多个键用逗号/空格/分号/管道分隔。例如：model,stream",
+    toolsOverride: "Tools 覆盖合并",
+    toolsOverrideTooltip:
+      "启用后，按 name 或 function.name 匹配合并 tools：同名替换，不存在则追加；其余字段仍按参数覆盖逻辑处理",
     addUpstream: "添加上游地址",
     groupConfig: "分组配置",
+    multimodalOnly: "仅支持多模态消息",
+    multimodalOnlyTooltip:
+      "开启后，将把字符串内容规范化为多模态数组形式，应用于 content 与 messages[].content",
     groupConfigTooltip:
       "针对此分组的专用配置参数，如超时时间、重试次数等。这些配置会覆盖全局默认设置",
     config: "配置",
