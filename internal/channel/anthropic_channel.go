@@ -94,7 +94,7 @@ func (ch *AnthropicChannel) ValidateKey(ctx context.Context, apiKey *models.APIK
 		"model":      ch.TestModel,
 		"max_tokens": 100,
 		"messages": []gin.H{
-			{"role": "user", "content": "hi"},
+			{"role": "user", "content": []gin.H{{"text": "Hi", "type": "text"}}},
 		},
 	}
 	ch.applyParamOverridesForValidation(payload, group)
