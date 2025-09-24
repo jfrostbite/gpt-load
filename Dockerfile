@@ -1,6 +1,6 @@
 FROM node:20-alpine AS builder
 
-ARG VERSION=2.0.0
+ARG VERSION=1.0.0
 WORKDIR /build
 COPY ./web .
 RUN npm install
@@ -9,7 +9,7 @@ RUN VITE_VERSION=${VERSION} npm run build
 
 FROM golang:alpine AS builder2
 
-ARG VERSION=2.0.0
+ARG VERSION=1.0.0
 ENV GO111MODULE=on \
     CGO_ENABLED=0 \
     GOOS=linux
