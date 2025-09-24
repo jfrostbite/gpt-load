@@ -39,6 +39,7 @@ type SystemSettings struct {
 	StreamAdapter         string `json:"stream_adapter" default:"" name:"config.stream_adapter" category:"config.category.request" desc:"config.stream_adapter_desc"`
 	StreamAdapterAnthropic bool  `json:"stream_adapter_anthropic" default:"false" name:"config.stream_adapter_anthropic" category:"config.category.request" desc:"config.stream_adapter_anthropic_desc"`
 	RemoveEmptyTextInMultimodal bool `json:"remove_empty_text_in_multimodal" default:"false" name:"config.remove_empty_text_in_multimodal" category:"config.category.request" desc:"config.remove_empty_text_in_multimodal_desc"`
+	ParamKeyReplacements  string `json:"param_key_replacements" default:"" name:"config.param_key_replacements" category:"config.category.request" desc:"config.param_key_replacements_desc"`
 
 	// 密钥配置
 	MaxRetries                   int `json:"max_retries" default:"3" name:"config.max_retries" category:"config.category.key" desc:"config.max_retries_desc" validate:"required,min=0"`

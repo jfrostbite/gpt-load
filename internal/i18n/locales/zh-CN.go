@@ -146,9 +146,11 @@ var MessagesZhCN = map[string]string{
 	"config.stream_adapter":               "流式适配器",
 	"config.stream_adapter_desc":          "选择一个适配器将上游 SSE 转换为目标格式（留空为透传）",
 	"config.stream_adapter_anthropic":     "流式适配为 Anthropic 格式",
-	"config.stream_adapter_anthropic_desc":"兼容旧开关，推荐使用“流式适配器”下拉",
+	"config.stream_adapter_anthropic_desc":"兼容旧开关，推荐使用\"流式适配器\"下拉",
 	"config.remove_empty_text_in_multimodal": "多模态中移除空文本块",
 	"config.remove_empty_text_in_multimodal_desc": "当 content 数组包含非 text 块时，移除 text 但内容为空/全空白的块，以满足上游校验",
+	"config.param_key_replacements": "参数名称替换",
+	"config.param_key_replacements_desc": "替换请求体中的参数名称，格式：old_key:new_key，多个规则用逗号/空格/分号/管道/斜杠分隔。如：max_completion_tokens:max_tokens",
 
 	// Key config related
 	"config.max_retries":                     "最大重试次数",

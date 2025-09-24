@@ -175,7 +175,56 @@ func (ps *ProxyServer) applyParamOverrides(bodyBytes []byte, group *models.Group
 		}
 	}
 
+	// Apply parameter key replacements
+	if replacements := group.EffectiveConfig.ParamKeyReplacements; replacements != "" {
+		ps.applyParamKeyReplacements(requestData, replacements)
+	}
+
 	return json.Marshal(requestData)
+}
+
+// applyParamKeyReplacements applies parameter key replacements to the request data
+// Format: "old_key:new_key,old_key2:new_key2" or using separators like ; | / \n \t
+func (ps *ProxyServer) applyParamKeyReplacements(requestData map[string]any, replacements string) {
+	if replacements == "" {
+		return
+	}
+
+	// Normalize separators to commas
+	rules := replacements
+	seps := []string{";", "|", "/", "\n", "\t"}
+	for _, sep := range seps {
+		rules = strings.ReplaceAll(rules, sep, ",")
+	}
+
+	// Process each replacement rule
+	for _, rule := range strings.Split(rules, ",") {
+		rule = strings.TrimSpace(rule)
+		if rule == "" {
+			continue
+		}
+
+		// Split by colon to get old_key:new_key
+		parts := strings.SplitN(rule, ":", 2)
+		if len(parts) != 2 {
+			continue
+		}
+
+		oldKey := strings.TrimSpace(parts[0])
+		newKey := strings.TrimSpace(parts[1])
+
+		if oldKey == "" || newKey == "" || oldKey == newKey {
+			continue
+		}
+
+		// If old key exists and new key doesn't exist, replace it
+		if value, exists := requestData[oldKey]; exists {
+			if _, newExists := requestData[newKey]; !newExists {
+				requestData[newKey] = value
+				delete(requestData, oldKey)
+			}
+		}
+	}
 }
 
 // logUpstreamError provides a centralized way to log errors from upstream interactions.
