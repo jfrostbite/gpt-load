@@ -3,6 +3,7 @@ FROM node:20-alpine AS builder
 ARG VERSION=2.0.0
 WORKDIR /build
 COPY ./web .
+RUN rm -rf node_modules package-lock.json
 RUN npm install
 RUN VITE_VERSION=${VERSION} npm run build
 
