@@ -151,6 +151,8 @@ var MessagesEnUS = map[string]string{
 	"config.remove_empty_text_in_multimodal_desc": "When a content array contains non-text blocks, remove any text blocks whose text is empty or whitespace to satisfy upstream validation",
 	"config.param_key_replacements": "Parameter Key Replacements",
 	"config.param_key_replacements_desc": "Replace parameter names in request body. Format: old_key:new_key, separate rules with comma/space/semicolon/pipe/slash. E.g.: max_completion_tokens:max_tokens",
+	"config.upstream_user_agent":       "Upstream User-Agent",
+	"config.upstream_user_agent_desc":  "Customize the User-Agent sent to upstream. Leave empty to use default. Can be overridden per group.",
 
 	// Key config related
 	"config.max_retries":                     "Max Retries",

@@ -107,6 +107,9 @@ func (ch *OpenAIChannel) ValidateKey(ctx context.Context, apiKey *models.APIKey,
 	}
 	req.Header.Set("Authorization", "Bearer "+apiKey.KeyValue)
 	req.Header.Set("Content-Type", "application/json")
+	if ua := strings.TrimSpace(group.EffectiveConfig.UpstreamUserAgent); ua != "" {
+		req.Header.Set("User-Agent", ua)
+	}
 
 	// Apply custom header rules if available
 	if len(group.HeaderRuleList) > 0 {

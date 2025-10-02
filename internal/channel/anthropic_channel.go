@@ -110,6 +110,9 @@ func (ch *AnthropicChannel) ValidateKey(ctx context.Context, apiKey *models.APIK
 	req.Header.Set("x-api-key", apiKey.KeyValue)
 	req.Header.Set("anthropic-version", "2023-06-01")
 	req.Header.Set("Content-Type", "application/json")
+	if ua := strings.TrimSpace(group.EffectiveConfig.UpstreamUserAgent); ua != "" {
+		req.Header.Set("User-Agent", ua)
+	}
 
 	// Apply custom header rules if available
 	if len(group.HeaderRuleList) > 0 {

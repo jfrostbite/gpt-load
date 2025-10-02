@@ -45,6 +45,7 @@ type GroupConfig struct {
 	StreamAdapterAnthropic       *bool   `json:"stream_adapter_anthropic,omitempty"`
 	RemoveEmptyTextInMultimodal  *bool   `json:"remove_empty_text_in_multimodal,omitempty"`
 	ParamKeyReplacements         *string `json:"param_key_replacements,omitempty"`
+	UpstreamUserAgent            *string `json:"upstream_user_agent,omitempty"`
 }
 
 // HeaderRule defines a single rule for header manipulation.

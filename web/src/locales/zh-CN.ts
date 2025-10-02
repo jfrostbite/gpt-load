@@ -435,6 +435,8 @@ export default {
     enableErrorLogging: "启用错误日志",
     enableDebugMode: "启用调试模式",
     proxyUrl: "代理服务器地址",
+    upstreamUserAgent: "上游 User-Agent",
+    upstreamUserAgentDesc: "自定义转发到上游时使用的 User-Agent。留空则使用默认值；可在分组配置中单独覆盖。",
     corsEnabled: "启用CORS",
     allowedOrigins: "允许的源",
     allowedMethods: "允许的方法",

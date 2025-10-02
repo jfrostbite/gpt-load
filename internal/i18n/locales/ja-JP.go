@@ -151,6 +151,8 @@ var MessagesJaJP = map[string]string{
 	"config.remove_empty_text_in_multimodal_desc": "content 配列に非テキストブロックが含まれる場合、テキストが空/空白の text ブロックを削除し、上流のバリデーションに適合させます",
 	"config.param_key_replacements": "パラメータキー置換",
 	"config.param_key_replacements_desc": "リクエストボディのパラメータ名を置換。形式：old_key:new_key、複数ルールはカンマ/空白/セミコロン/パイプ/スラッシュ区切り。例：max_completion_tokens:max_tokens",
+	"config.upstream_user_agent":       "上流のUser-Agent",
+	"config.upstream_user_agent_desc":  "上流に送信するUser-Agentをカスタマイズします。空の場合はデフォルトを使用。グループ単位で上書き可能。",
 
 	// Key config related
 	"config.max_retries":                     "最大リトライ数",

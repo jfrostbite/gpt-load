@@ -151,6 +151,8 @@ var MessagesZhCN = map[string]string{
 	"config.remove_empty_text_in_multimodal_desc": "当 content 数组包含非 text 块时，移除 text 但内容为空/全空白的块，以满足上游校验",
 	"config.param_key_replacements": "参数名称替换",
 	"config.param_key_replacements_desc": "替换请求体中的参数名称，格式：old_key:new_key，多个规则用逗号/空格/分号/管道/斜杠分隔。如：max_completion_tokens:max_tokens",
+	"config.upstream_user_agent":       "上游 User-Agent",
+	"config.upstream_user_agent_desc":  "自定义转发到上游时使用的 User-Agent。留空则使用默认值；可在分组配置中单独覆盖。",
 
 	// Key config related
 	"config.max_retries":                     "最大重试次数",

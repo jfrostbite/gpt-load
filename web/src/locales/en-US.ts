@@ -445,6 +445,8 @@ export default {
     enableErrorLogging: "Enable Error Logging",
     enableDebugMode: "Enable Debug Mode",
     proxyUrl: "Proxy Server URL",
+    upstreamUserAgent: "Upstream User-Agent",
+    upstreamUserAgentDesc: "Customize the User-Agent sent to upstream. Leave empty to use default. Can be overridden per group.",
     corsEnabled: "Enable CORS",
     allowedOrigins: "Allowed Origins",
     allowedMethods: "Allowed Methods",

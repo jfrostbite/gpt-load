@@ -127,6 +127,9 @@ func (ch *GeminiChannel) ValidateKey(ctx context.Context, apiKey *models.APIKey,
 		return false, fmt.Errorf("failed to create validation request: %w", err)
 	}
 	req.Header.Set("Content-Type", "application/json")
+	if ua := strings.TrimSpace(group.EffectiveConfig.UpstreamUserAgent); ua != "" {
+		req.Header.Set("User-Agent", ua)
+	}
 
 	// Apply custom header rules if available
 	if len(group.HeaderRuleList) > 0 {

@@ -136,6 +136,9 @@ func (ps *ProxyServer) executeRequestWithRetry(
 	req.ContentLength = int64(len(bodyBytes))
 
 	req.Header = c.Request.Header.Clone()
+	if ua := strings.TrimSpace(cfg.UpstreamUserAgent); ua != "" {
+		req.Header.Set("User-Agent", ua)
+	}
 
 	// Clean up client auth key
 	req.Header.Del("Authorization")
