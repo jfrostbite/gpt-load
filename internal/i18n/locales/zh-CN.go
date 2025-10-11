@@ -143,6 +143,8 @@ var MessagesZhCN = map[string]string{
 	"config.remove_params_desc":          "在转发前删除请求体中的顶层字段，多个键用逗号/空格/分号/管道/斜杠分隔",
 	"config.tools_override":              "Tools 覆盖合并",
 	"config.tools_override_desc":         "从参数覆盖中按 name 或 function.name 合并 tools：同名替换，不存在则追加",
+	"config.peer_level_key_check":       "同级键值检查",
+	"config.peer_level_key_check_desc":   "仅覆盖请求中不存在的参数（防止覆盖已有值）",
 	"config.stream_adapter":               "流式适配器",
 	"config.stream_adapter_desc":          "选择一个适配器将上游 SSE 转换为目标格式（留空为透传）",
 	"config.stream_adapter_anthropic":     "流式适配为 Anthropic 格式",
@@ -153,6 +155,12 @@ var MessagesZhCN = map[string]string{
 	"config.param_key_replacements_desc": "替换请求体中的参数名称，格式：old_key:new_key，多个规则用逗号/空格/分号/管道/斜杠分隔。如：max_completion_tokens:max_tokens",
 	"config.upstream_user_agent":       "上游 User-Agent",
 	"config.upstream_user_agent_desc":  "自定义转发到上游时使用的 User-Agent。留空则使用默认值；可在分组配置中单独覆盖。",
+	"config.max_tokens":                "最大令牌数",
+	"config.max_tokens_desc":           "设置默认的最大令牌数（如：4096）。仅在请求中不包含 max_tokens 或 max_completion_tokens 时生效。设置为 0 则禁用。",
+	"config.use_openai_compat":         "使用 OpenAI 兼容模式",
+	"config.use_openai_compat_desc":    "启用后，为 OpenAI 兼容的 API 设置 max_completion_tokens 而不是 max_tokens。",
+	"config.force_streaming":           "强制流式输出",
+	"config.force_streaming_desc":      "通过设置 stream: true 强制所有请求使用流式模式。",
 
 	// Key config related
 	"config.max_retries":                     "最大重试次数",

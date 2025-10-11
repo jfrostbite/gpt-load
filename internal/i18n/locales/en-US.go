@@ -143,6 +143,8 @@ var MessagesEnUS = map[string]string{
 	"config.remove_params_desc":          "Remove specific top-level fields from request body before forwarding. Separate keys by comma/space/semicolon/pipe/slash",
 	"config.tools_override":              "Tools override/merge",
 	"config.tools_override_desc":         "Merge tools by name or function.name from Param Overrides: replace if exists, append if missing",
+	"config.peer_level_key_check":       "Peer-level key check",
+	"config.peer_level_key_check_desc":   "Only override parameters that don't already exist in the request (prevents overwriting existing values)",
 	"config.stream_adapter":               "Stream adapter",
 	"config.stream_adapter_desc":          "Select a stream adapter to transform upstream SSE to a target format (leave empty to passthrough)",
 	"config.stream_adapter_anthropic":     "Adapt upstream SSE to Anthropic format",
@@ -153,6 +155,12 @@ var MessagesEnUS = map[string]string{
 	"config.param_key_replacements_desc": "Replace parameter names in request body. Format: old_key:new_key, separate rules with comma/space/semicolon/pipe/slash. E.g.: max_completion_tokens:max_tokens",
 	"config.upstream_user_agent":       "Upstream User-Agent",
 	"config.upstream_user_agent_desc":  "Customize the User-Agent sent to upstream. Leave empty to use default. Can be overridden per group.",
+	"config.max_tokens":                "Max Tokens",
+	"config.max_tokens_desc":           "Set a default max tokens value (e.g., 4096). Only applied if the request doesn't already contain max_tokens or max_completion_tokens. 0 to disable.",
+	"config.use_openai_compat":         "Use OpenAI compatibility mode",
+	"config.use_openai_compat_desc":    "When enabled, sets max_completion_tokens instead of max_tokens for OpenAI-compatible APIs.",
+	"config.force_streaming":           "Force streaming",
+	"config.force_streaming_desc":      "Force all requests to use streaming mode by setting stream: true.",
 
 	// Key config related
 	"config.max_retries":                     "Max Retries",

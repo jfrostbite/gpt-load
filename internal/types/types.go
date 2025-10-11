@@ -36,11 +36,15 @@ type SystemSettings struct {
 	MultimodalOnly        bool   `json:"multimodal_only" default:"false" name:"config.multimodal_only" category:"config.category.request" desc:"config.multimodal_only_desc"`
 	RemoveParams          string `json:"remove_params" default:"" name:"config.remove_params" category:"config.category.request" desc:"config.remove_params_desc"`
 	ToolsOverride         bool   `json:"tools_override" default:"false" name:"config.tools_override" category:"config.category.request" desc:"config.tools_override_desc"`
+	PeerLevelKeyCheck     bool   `json:"peer_level_key_check" default:"true" name:"config.peer_level_key_check" category:"config.category.request" desc:"config.peer_level_key_check_desc"`
 	StreamAdapter         string `json:"stream_adapter" default:"" name:"config.stream_adapter" category:"config.category.request" desc:"config.stream_adapter_desc"`
 	StreamAdapterAnthropic bool  `json:"stream_adapter_anthropic" default:"false" name:"config.stream_adapter_anthropic" category:"config.category.request" desc:"config.stream_adapter_anthropic_desc"`
 	RemoveEmptyTextInMultimodal bool `json:"remove_empty_text_in_multimodal" default:"false" name:"config.remove_empty_text_in_multimodal" category:"config.category.request" desc:"config.remove_empty_text_in_multimodal_desc"`
 	ParamKeyReplacements  string `json:"param_key_replacements" default:"" name:"config.param_key_replacements" category:"config.category.request" desc:"config.param_key_replacements_desc"`
 	UpstreamUserAgent     string `json:"upstream_user_agent" default:"" name:"config.upstream_user_agent" category:"config.category.request" desc:"config.upstream_user_agent_desc"`
+	MaxTokens             int    `json:"max_tokens" default:"0" name:"config.max_tokens" category:"config.category.request" desc:"config.max_tokens_desc" validate:"min=0"`
+	UseOpenAICompat       bool   `json:"use_openai_compat" default:"false" name:"config.use_openai_compat" category:"config.category.request" desc:"config.use_openai_compat_desc"`
+	ForceStreaming        bool   `json:"force_streaming" default:"false" name:"config.force_streaming" category:"config.category.request" desc:"config.force_streaming_desc"`
 
 	// 密钥配置
 	MaxRetries                   int `json:"max_retries" default:"3" name:"config.max_retries" category:"config.category.key" desc:"config.max_retries_desc" validate:"required,min=0"`

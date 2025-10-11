@@ -40,72 +40,126 @@ func (ps *ProxyServer) applyParamOverrides(bodyBytes []byte, group *models.Group
 		return bodyBytes, nil
 	}
 
+	// Step 1: Apply parameter removal first
+	if rp := group.EffectiveConfig.RemoveParams; rp != "" {
+		params := rp
+		seps := []string{",", ";", " ", "|", "/", "\n", "\t"}
+		for _, sep := range seps {
+			params = strings.ReplaceAll(params, sep, ",")
+		}
+		for _, key := range strings.Split(params, ",") {
+			k := strings.TrimSpace(key)
+			if k == "" {
+				continue
+			}
+			delete(requestData, k)
+		}
+	}
+
+	// Step 2: Apply parameter key replacements
+	if replacements := group.EffectiveConfig.ParamKeyReplacements; replacements != "" {
+		ps.applyParamKeyReplacements(requestData, replacements)
+	}
+
+	// Step 3: Apply parameter overrides with peer-level key checking
 	if len(group.ParamOverrides) > 0 {
 		for key, value := range group.ParamOverrides {
 			if key == "tools" {
 				continue
 			}
-			requestData[key] = value
+			// Apply peer-level key check if enabled
+			if group.EffectiveConfig.PeerLevelKeyCheck {
+				// Only override if key doesn't already exist in the request
+				// This check happens after removal and replacements to ensure we don't override
+				// keys that should be preserved in the downstream request
+				if _, exists := requestData[key]; !exists {
+					requestData[key] = value
+				}
+			} else {
+				// If peer-level checking is disabled, always override
+				requestData[key] = value
+			}
 		}
 		if group.EffectiveConfig.ToolsOverride {
 			if tv, ok := group.ParamOverrides["tools"]; ok {
-			var existing []any
-			if et, ok2 := requestData["tools"].([]any); ok2 {
-				existing = et
-			}
-			overrideArr, ok2 := tv.([]any)
-			if !ok2 {
-				if m, ok3 := tv.(map[string]any); ok3 {
-					overrideArr = []any{m}
+				var existing []any
+				if et, ok2 := requestData["tools"].([]any); ok2 {
+					existing = et
 				}
-			}
-			if len(overrideArr) > 0 {
-				byName := make(map[string]int)
-				for i := range existing {
-					if em, ok4 := existing[i].(map[string]any); ok4 {
+				overrideArr, ok2 := tv.([]any)
+				if !ok2 {
+					if m, ok3 := tv.(map[string]any); ok3 {
+						overrideArr = []any{m}
+					}
+				}
+				if len(overrideArr) > 0 {
+					byName := make(map[string]int)
+					for i := range existing {
+						if em, ok4 := existing[i].(map[string]any); ok4 {
+							name := ""
+							if n, ok5 := em["name"].(string); ok5 && n != "" {
+								name = n
+							}
+							if fn, ok5 := em["function"].(map[string]any); ok5 {
+								if n2, ok6 := fn["name"].(string); ok6 && n2 != "" {
+									name = n2
+								}
+							}
+							if name != "" {
+								byName[name] = i
+							}
+						}
+					}
+					for _, ov := range overrideArr {
+						om, ok7 := ov.(map[string]any)
+						if !ok7 {
+							continue
+						}
 						name := ""
-						if n, ok5 := em["name"].(string); ok5 && n != "" {
+						if n, ok8 := om["name"].(string); ok8 && n != "" {
 							name = n
 						}
-						if fn, ok5 := em["function"].(map[string]any); ok5 {
-							if n2, ok6 := fn["name"].(string); ok6 && n2 != "" {
+						if fn, ok8 := om["function"].(map[string]any); ok8 {
+							if n2, ok9 := fn["name"].(string); ok9 && n2 != "" {
 								name = n2
 							}
 						}
-						if name != "" {
-							byName[name] = i
+						if name == "" {
+							continue
 						}
-					}
-				}
-				for _, ov := range overrideArr {
-					om, ok7 := ov.(map[string]any)
-					if !ok7 {
-						continue
-					}
-					name := ""
-					if n, ok8 := om["name"].(string); ok8 && n != "" {
-						name = n
-					}
-					if fn, ok8 := om["function"].(map[string]any); ok8 {
-						if n2, ok9 := fn["name"].(string); ok9 && n2 != "" {
-							name = n2
+						if _, exists := byName[name]; exists {
+							continue
 						}
+						existing = append(existing, om)
+						byName[name] = len(existing) - 1
 					}
-					if name == "" {
-						continue
-					}
-					if _, exists := byName[name]; exists {
-						continue
-					}
-					existing = append(existing, om)
-					byName[name] = len(existing) - 1
+					requestData["tools"] = existing
 				}
-				requestData["tools"] = existing
 			}
 		}
 	}
-}
 
+	// Step 4: Apply max_tokens configuration if set
+	if group.EffectiveConfig.MaxTokens > 0 {
+		if group.EffectiveConfig.UseOpenAICompat {
+			// Check if max_completion_tokens already exists
+			if _, exists := requestData["max_completion_tokens"]; !exists {
+				requestData["max_completion_tokens"] = group.EffectiveConfig.MaxTokens
+			}
+		} else {
+			// Check if max_tokens already exists
+			if _, exists := requestData["max_tokens"]; !exists {
+				requestData["max_tokens"] = group.EffectiveConfig.MaxTokens
+			}
+		}
+	}
+
+	// Step 5: Apply force streaming if enabled
+	if group.EffectiveConfig.ForceStreaming {
+		requestData["stream"] = true
+	}
+
+	// Step 6: Apply multimodal transformations
 	if group.EffectiveConfig.MultimodalOnly {
 		if content, ok := requestData["content"].(string); ok && content != "" {
 			requestData["content"] = []map[string]any{{"type": "text", "text": content}}
@@ -121,6 +175,7 @@ func (ps *ProxyServer) applyParamOverrides(bodyBytes []byte, group *models.Group
 		}
 	}
 
+	// Step 7: Remove empty text in multimodal messages
 	if group.EffectiveConfig.RemoveEmptyTextInMultimodal {
 		if msgs, ok := requestData["messages"].([]any); ok {
 			for i := range msgs {
@@ -158,26 +213,6 @@ func (ps *ProxyServer) applyParamOverrides(bodyBytes []byte, group *models.Group
 			}
 			requestData["content"] = cleaned
 		}
-	}
-
-	if rp := group.EffectiveConfig.RemoveParams; rp != "" {
-		params := rp
-		seps := []string{",", ";", " ", "|", "/", "\n", "\t"}
-		for _, sep := range seps {
-			params = strings.ReplaceAll(params, sep, ",")
-		}
-		for _, key := range strings.Split(params, ",") {
-			k := strings.TrimSpace(key)
-			if k == "" {
-				continue
-			}
-			delete(requestData, k)
-		}
-	}
-
-	// Apply parameter key replacements
-	if replacements := group.EffectiveConfig.ParamKeyReplacements; replacements != "" {
-		ps.applyParamKeyReplacements(requestData, replacements)
 	}
 
 	return json.Marshal(requestData)

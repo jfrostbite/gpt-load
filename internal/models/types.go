@@ -46,6 +46,10 @@ type GroupConfig struct {
 	RemoveEmptyTextInMultimodal  *bool   `json:"remove_empty_text_in_multimodal,omitempty"`
 	ParamKeyReplacements         *string `json:"param_key_replacements,omitempty"`
 	UpstreamUserAgent            *string `json:"upstream_user_agent,omitempty"`
+	PeerLevelKeyCheck            *bool   `json:"peer_level_key_check,omitempty"`
+	MaxTokens                    *int    `json:"max_tokens,omitempty"`
+	UseOpenAICompat              *bool   `json:"use_openai_compat,omitempty"`
+	ForceStreaming               *bool   `json:"force_streaming,omitempty"`
 }
 
 // HeaderRule defines a single rule for header manipulation.

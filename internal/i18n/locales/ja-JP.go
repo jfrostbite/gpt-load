@@ -143,6 +143,8 @@ var MessagesJaJP = map[string]string{
 	"config.remove_params_desc":          "転送前にリクエストボディのトップレベルのフィールドを削除。複数キーはカンマ/空白/セミコロン/パイプ/スラッシュ区切り",
 	"config.tools_override":              "Tools 上書き/マージ",
 	"config.tools_override_desc":         "パラメータ上書きから name または function.name で tools をマージ：同名は置換、存在しなければ追加",
+	"config.peer_level_key_check":       "ピアレベルキーチェック",
+	"config.peer_level_key_check_desc":   "リクエストに存在しないパラメータのみを上書き（既存値の上書きを防止）",
 	"config.stream_adapter":               "ストリームアダプター",
 	"config.stream_adapter_desc":          "上流SSEをターゲット形式に変換するアダプターを選択（空は透過）",
 	"config.stream_adapter_anthropic":     "SSEをAnthropic形式に適応",
@@ -153,6 +155,12 @@ var MessagesJaJP = map[string]string{
 	"config.param_key_replacements_desc": "リクエストボディのパラメータ名を置換。形式：old_key:new_key、複数ルールはカンマ/空白/セミコロン/パイプ/スラッシュ区切り。例：max_completion_tokens:max_tokens",
 	"config.upstream_user_agent":       "上流のUser-Agent",
 	"config.upstream_user_agent_desc":  "上流に送信するUser-Agentをカスタマイズします。空の場合はデフォルトを使用。グループ単位で上書き可能。",
+	"config.max_tokens":                "最大トークン数",
+	"config.max_tokens_desc":           "デフォルトの最大トークン数を設定します（例：4096）。リクエストに max_tokens または max_completion_tokens が含まれていない場合のみ適用されます。0で無効。",
+	"config.use_openai_compat":         "OpenAI互換モードを使用",
+	"config.use_openai_compat_desc":    "有効にすると、OpenAI互換APIで max_tokens の代わりに max_completion_tokens を設定します。",
+	"config.force_streaming":           "強制ストリーミング",
+	"config.force_streaming_desc":      "stream: true を設定して、すべてのリクエストをストリーミングモードで強制します。",
 
 	// Key config related
 	"config.max_retries":                     "最大リトライ数",
