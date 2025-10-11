@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Group } from "@/types/models";
-import { getGroupDisplayName } from "@/utils/display";
+import { getChannelTypeLabel, getGroupDisplayName } from "@/utils/display";
 import { Add, Search } from "@vicons/ionicons5";
 import { NButton, NCard, NEmpty, NInput, NSpin, NTag } from "naive-ui";
 import { computed, ref, watch } from "vue";
@@ -76,6 +76,8 @@ function getChannelTagType(channelType: string) {
   switch (channelType) {
     case "openai":
       return "success";
+    case "openai-responses":
+      return "success";
     case "gemini":
       return "info";
     case "anthropic":
@@ -139,6 +141,7 @@ function handleGroupCreated(group: Group) {
             >
               <div class="group-icon">
                 <span v-if="group.channel_type === 'openai'">🤖</span>
+                <span v-else-if="group.channel_type === 'openai-responses'">🪄</span>
                 <span v-else-if="group.channel_type === 'gemini'">💎</span>
                 <span v-else-if="group.channel_type === 'anthropic'">🧠</span>
                 <span v-else>🔧</span>
@@ -147,7 +150,7 @@ function handleGroupCreated(group: Group) {
                 <div class="group-name">{{ getGroupDisplayName(group) }}</div>
                 <div class="group-meta">
                   <n-tag size="tiny" :type="getChannelTagType(group.channel_type)">
-                    {{ group.channel_type }}
+                    {{ getChannelTypeLabel(group.channel_type) }}
                   </n-tag>
                   <span class="group-id">#{{ group.name }}</span>
                 </div>

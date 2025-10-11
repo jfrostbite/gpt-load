@@ -3,7 +3,7 @@ import { keysApi } from "@/api/keys";
 import type { Group, GroupConfigOption, GroupStatsResponse } from "@/types/models";
 import { appState } from "@/utils/app-state";
 import { copy } from "@/utils/clipboard";
-import { getGroupDisplayName, maskProxyKeys } from "@/utils/display";
+import { getChannelTypeLabel, getGroupDisplayName, maskProxyKeys } from "@/utils/display";
 import { CopyOutline, EyeOffOutline, EyeOutline, Pencil, Trash } from "@vicons/ionicons5";
 import {
   NButton,
@@ -466,7 +466,7 @@ function resetPage() {
                     </n-grid-item>
                     <n-grid-item>
                       <n-form-item :label="`${t('keys.channelType')}：`">
-                        {{ group?.channel_type }}
+                        {{ getChannelTypeLabel(group?.channel_type || "") }}
                       </n-form-item>
                     </n-grid-item>
                     <n-grid-item>

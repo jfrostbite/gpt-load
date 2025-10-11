@@ -3,6 +3,7 @@ import { keysApi } from "@/api/keys";
 import { settingsApi } from "@/api/settings";
 import ProxyKeysInput from "@/components/common/ProxyKeysInput.vue";
 import type { Group, GroupConfigOption, UpstreamInfo } from "@/types/models";
+import { getChannelTypeLabel } from "@/utils/display";
 import { Add, Close, HelpCircleOutline, Remove } from "@vicons/ionicons5";
 import {
   NButton,
@@ -63,7 +64,7 @@ interface GroupFormData {
   display_name: string;
   description: string;
   upstreams: UpstreamInfo[];
-  channel_type: "anthropic" | "gemini" | "openai";
+  channel_type: "anthropic" | "gemini" | "openai" | "openai-responses";
   sort: number;
   test_model: string;
   validation_endpoint: string;
@@ -117,6 +118,8 @@ const testModelPlaceholder = computed(() => {
   switch (formData.channel_type) {
     case "openai":
       return "gpt-4.1-nano";
+    case "openai-responses":
+      return "gpt-4.1-mini";
     case "gemini":
       return "gemini-2.0-flash-lite";
     case "anthropic":
@@ -129,6 +132,8 @@ const testModelPlaceholder = computed(() => {
 const upstreamPlaceholder = computed(() => {
   switch (formData.channel_type) {
     case "openai":
+      return "https://api.openai.com";
+    case "openai-responses":
       return "https://api.openai.com";
     case "gemini":
       return "https://generativelanguage.googleapis.com";
@@ -143,6 +148,8 @@ const validationEndpointPlaceholder = computed(() => {
   switch (formData.channel_type) {
     case "openai":
       return "/v1/chat/completions";
+    case "openai-responses":
+      return "/v1/responses";
     case "anthropic":
       return "/v1/messages";
     case "gemini":
@@ -242,6 +249,8 @@ function getOldDefaultTestModel(channelType: string): string {
   switch (channelType) {
     case "openai":
       return "gpt-4.1-nano";
+    case "openai-responses":
+      return "gpt-4.1-mini";
     case "gemini":
       return "gemini-2.0-flash-lite";
     case "anthropic":
@@ -254,6 +263,8 @@ function getOldDefaultTestModel(channelType: string): string {
 function getOldDefaultUpstream(channelType: string): string {
   switch (channelType) {
     case "openai":
+      return "https://api.openai.com";
+    case "openai-responses":
       return "https://api.openai.com";
     case "gemini":
       return "https://generativelanguage.googleapis.com";
@@ -339,7 +350,7 @@ async function fetchChannelTypes() {
   const options = (await settingsApi.getChannelTypes()) || [];
   channelTypeOptions.value =
     options?.map((type: string) => ({
-      label: type,
+      label: getChannelTypeLabel(type),
       value: type,
     })) || [];
   channelTypesFetched.value = true;

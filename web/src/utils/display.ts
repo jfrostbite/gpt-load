@@ -1,5 +1,12 @@
 import type { Group } from "@/types/models";
 
+const CHANNEL_TYPE_LABELS: Record<string, string> = {
+  openai: "OpenAI",
+  "openai-responses": "OpenAI Responses",
+  gemini: "Gemini",
+  anthropic: "Anthropic",
+};
+
 /**
  * Formats a string from camelCase, snake_case, or kebab-case
  * into a more readable format with spaces and capitalized words.
@@ -36,6 +43,13 @@ export function formatDisplayName(name: string): string {
  */
 export function getGroupDisplayName(group: Group): string {
   return group.display_name || formatDisplayName(group.name);
+}
+
+export function getChannelTypeLabel(channelType: string): string {
+  if (!channelType) {
+    return "";
+  }
+  return CHANNEL_TYPE_LABELS[channelType] || formatDisplayName(channelType);
 }
 
 /**
