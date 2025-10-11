@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import type { Group } from "@/types/models";
-import { getGroupDisplayName } from "@/utils/display";
+import { getChannelTypeLabel, getGroupDisplayName } from "@/utils/display";
 import { Add, LinkOutline, Search } from "@vicons/ionicons5";
 import { NButton, NCard, NEmpty, NInput, NSpin, NTag } from "naive-ui";
 import { computed, ref, watch } from "vue";
@@ -150,6 +150,7 @@ function handleGroupCreated(group: Group) {
               <div class="group-icon">
                 <span v-if="group.group_type === 'aggregate'">🔗</span>
                 <span v-else-if="group.channel_type === 'openai'">🤖</span>
+                <span v-else-if="group.channel_type === 'openai-responses'">🪄</span>
                 <span v-else-if="group.channel_type === 'gemini'">💎</span>
                 <span v-else-if="group.channel_type === 'anthropic'">🧠</span>
                 <span v-else>🔧</span>

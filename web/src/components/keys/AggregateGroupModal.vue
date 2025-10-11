@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { keysApi } from "@/api/keys";
 import ProxyKeysInput from "@/components/common/ProxyKeysInput.vue";
+import { getChannelTypeLabel } from "@/utils/display";
 import { type ChannelType, type Group } from "@/types/models";
 import { Close } from "@vicons/ionicons5";
 import {
@@ -42,9 +43,10 @@ const formRef = ref();
 
 // 渠道类型选项
 const channelTypeOptions = [
-  { label: "OpenAI", value: "openai" as ChannelType },
-  { label: "Gemini", value: "gemini" as ChannelType },
-  { label: "Anthropic", value: "anthropic" as ChannelType },
+  { label: getChannelTypeLabel("openai"), value: "openai" as ChannelType },
+  { label: getChannelTypeLabel("openai-responses"), value: "openai-responses" as ChannelType },
+  { label: getChannelTypeLabel("gemini"), value: "gemini" as ChannelType },
+  { label: getChannelTypeLabel("anthropic"), value: "anthropic" as ChannelType },
 ];
 
 // 默认表单数据
