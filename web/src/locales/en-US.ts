@@ -290,6 +290,8 @@ export default {
     customHeaders: "Custom Headers",
     emptyValue: "(empty)",
     paramOverrides: "Parameter Overrides",
+    systemPromptModeFront: "Prepend to system prompt",
+    systemPromptModeEnd: "Append to system prompt",
     enterModelName: "Enter model name",
     enterUpstreamUrl: "Enter upstream URL",
     enterValidationPath: "Enter validation endpoint path",
@@ -516,7 +518,8 @@ export default {
     enableDebugMode: "Enable Debug Mode",
     proxyUrl: "Proxy Server URL",
     upstreamUserAgent: "Upstream User-Agent",
-    upstreamUserAgentDesc: "Customize the User-Agent sent to upstream. Leave empty to use default. Can be overridden per group.",
+    upstreamUserAgentDesc:
+      "Customize the User-Agent sent to upstream. Leave empty to use default. Can be overridden per group.",
     corsEnabled: "Enable CORS",
     allowedOrigins: "Allowed Origins",
     allowedMethods: "Allowed Methods",

@@ -215,6 +215,9 @@ func (ps *ProxyServer) applyParamOverrides(bodyBytes []byte, group *models.Group
 		}
 	}
 
+	// Step 8: Append system prompt text if configured
+	ps.applySystemPromptAppend(requestData, group)
+
 	return json.Marshal(requestData)
 }
 
@@ -259,6 +262,143 @@ func (ps *ProxyServer) applyParamKeyReplacements(requestData map[string]any, rep
 				delete(requestData, oldKey)
 			}
 		}
+	}
+}
+
+func (ps *ProxyServer) applySystemPromptAppend(requestData map[string]any, group *models.Group) {
+	if group == nil {
+		return
+	}
+
+	text := strings.TrimSpace(group.EffectiveConfig.SystemPromptAppendText)
+	if text == "" {
+		return
+	}
+
+	mode := normalizeSystemPromptMode(group.EffectiveConfig.SystemPromptAppendMode)
+
+	switch group.ChannelType {
+	case "openai":
+		appendOpenAISystemMessage(requestData, text, mode)
+	case "openai-responses":
+		appendOpenAIResponsesInstructions(requestData, text, mode)
+	case "anthropic":
+		appendAnthropicSystemPrompt(requestData, text, mode)
+	case "gemini":
+		appendGeminiSystemInstruction(requestData, text, mode)
+	default:
+		appendOpenAISystemMessage(requestData, text, mode)
+	}
+}
+
+func appendOpenAISystemMessage(requestData map[string]any, text, mode string) {
+	msg := map[string]any{"role": "system", "content": text}
+
+	if messages, ok := requestData["messages"].([]any); ok && len(messages) > 0 {
+		if mode == "front" {
+			requestData["messages"] = append([]any{msg}, messages...)
+		} else {
+			requestData["messages"] = append(messages, msg)
+		}
+		return
+	}
+
+	requestData["messages"] = []any{msg}
+}
+
+func appendOpenAIResponsesInstructions(requestData map[string]any, text, mode string) {
+	if instructions, ok := requestData["instructions"].(string); ok && instructions != "" {
+		requestData["instructions"] = combineSystemPrompt(instructions, text, mode)
+		return
+	}
+
+	requestData["instructions"] = text
+}
+
+func appendAnthropicSystemPrompt(requestData map[string]any, text, mode string) {
+	trimmed := strings.TrimSpace(text)
+	if trimmed == "" {
+		return
+	}
+
+	switch current := requestData["system"].(type) {
+	case string:
+		requestData["system"] = combineSystemPrompt(current, text, mode)
+	case []any:
+		requestData["system"] = mergeAnthropicSystemArray(current, text, mode)
+	case []map[string]any:
+		var items []any
+		for _, m := range current {
+			items = append(items, m)
+		}
+		requestData["system"] = mergeAnthropicSystemArray(items, text, mode)
+	case map[string]any:
+		requestData["system"] = mergeAnthropicSystemArray([]any{current}, text, mode)
+	default:
+		requestData["system"] = text
+	}
+}
+
+func appendGeminiSystemInstruction(requestData map[string]any, text, mode string) {
+	if instruction, ok := requestData["systemInstruction"].(map[string]any); ok {
+		if parts, ok := instruction["parts"].([]any); ok && len(parts) > 0 {
+			part := map[string]any{"text": text}
+			if mode == "front" {
+				instruction["parts"] = append([]any{part}, parts...)
+			} else {
+				instruction["parts"] = append(parts, part)
+			}
+			requestData["systemInstruction"] = instruction
+			return
+		}
+		if existing, ok := instruction["text"].(string); ok {
+			instruction["text"] = combineSystemPrompt(existing, text, mode)
+			requestData["systemInstruction"] = instruction
+			return
+		}
+	}
+
+	requestData["systemInstruction"] = map[string]any{
+		"parts": []any{
+			map[string]any{"text": text},
+		},
+	}
+}
+
+func mergeAnthropicSystemArray(items []any, text, mode string) []any {
+	trimmed := strings.TrimSpace(text)
+	if trimmed == "" {
+		return items
+	}
+
+	part := map[string]any{"type": "text", "text": text}
+	if mode == "front" {
+		return append([]any{part}, items...)
+	}
+	return append(items, part)
+}
+
+func combineSystemPrompt(base, extra, mode string) string {
+	if extra == "" {
+		return base
+	}
+	if base == "" {
+		return extra
+	}
+
+	separator := "\n\n"
+	if mode == "front" {
+		return extra + separator + base
+	}
+	return base + separator + extra
+}
+
+func normalizeSystemPromptMode(mode string) string {
+	switch strings.ToLower(strings.TrimSpace(mode)) {
+	case "front", "start", "prefix", "prepend", "begin", "head", "before":
+		return "front"
+	default:
+		return "end"
 	}
 }
 

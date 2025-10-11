@@ -172,6 +172,10 @@ var MessagesZhCN = map[string]string{
 	"config.use_openai_compat_desc":    "启用后，为 OpenAI 兼容的 API 设置 max_completion_tokens 而不是 max_tokens。",
 	"config.force_streaming":           "强制流式输出",
 	"config.force_streaming_desc":      "通过设置 stream: true 强制所有请求使用流式模式。",
+	"config.system_prompt_append_text":     "System Prompt 追加内容",
+	"config.system_prompt_append_text_desc": "为所有请求的 system prompt 追加的自定义文本，留空表示不追加。",
+	"config.system_prompt_append_mode":     "System Prompt 追加位置",
+	"config.system_prompt_append_mode_desc": "选择追加位置：front 表示追加到开头，end 表示追加到末尾。",
 
 	// Key config related
 	"config.max_retries":                     "最大重试次数",

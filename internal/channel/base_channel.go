@@ -282,4 +282,173 @@ func (b *BaseChannel) applyParamOverridesForValidation(payload map[string]any, g
 			delete(payload, k)
 		}
 	}
+
+	b.applySystemPromptAppendForValidation(payload, group)
+}
+
+func (b *BaseChannel) applySystemPromptAppendForValidation(payload map[string]any, group *models.Group) {
+	if group == nil {
+		return
+	}
+
+	text := strings.TrimSpace(group.EffectiveConfig.SystemPromptAppendText)
+	if text == "" {
+		return
+	}
+
+	mode := normalizeSystemPromptMode(group.EffectiveConfig.SystemPromptAppendMode)
+
+	switch group.ChannelType {
+	case "openai":
+		appendSystemPromptToOpenAIMessages(payload, text, mode)
+	case "openai-responses":
+		appendSystemPromptToOpenAIResponses(payload, text, mode)
+	case "anthropic":
+		appendSystemPromptToAnthropic(payload, text, mode)
+	case "gemini":
+		appendSystemPromptToGemini(payload, text, mode)
+	default:
+		appendSystemPromptToOpenAIMessages(payload, text, mode)
+	}
+}
+
+func appendSystemPromptToOpenAIMessages(payload map[string]any, text, mode string) {
+	messages := toMapSlice(payload["messages"])
+	if len(messages) == 0 {
+		payload["messages"] = []map[string]any{{"role": "system", "content": text}}
+		return
+	}
+
+	for i := range messages {
+		if role, _ := messages[i]["role"].(string); strings.EqualFold(role, "system") {
+			if content, ok := messages[i]["content"].(string); ok {
+				messages[i]["content"] = combineSystemPrompt(content, text, mode)
+			} else {
+				messages[i]["content"] = text
+			}
+			payload["messages"] = messages
+			return
+		}
+	}
+
+	systemMsg := map[string]any{"role": "system", "content": text}
+	if mode == "front" {
+		payload["messages"] = append([]map[string]any{systemMsg}, messages...)
+	} else {
+		payload["messages"] = append(messages, systemMsg)
+	}
+}
+
+func appendSystemPromptToOpenAIResponses(payload map[string]any, text, mode string) {
+	if existing, ok := payload["instructions"].(string); ok && strings.TrimSpace(existing) != "" {
+		payload["instructions"] = combineSystemPrompt(existing, text, mode)
+		return
+	}
+	payload["instructions"] = text
+}
+
+func appendSystemPromptToAnthropic(payload map[string]any, text, mode string) {
+	trimmed := strings.TrimSpace(text)
+	if trimmed == "" {
+		return
+	}
+
+	if existing, ok := payload["system"].(string); ok {
+		payload["system"] = combineSystemPrompt(existing, text, mode)
+		return
+	}
+
+	if systemList := toMapSlice(payload["system"]); len(systemList) > 0 {
+		part := map[string]any{"type": "text", "text": text}
+		if mode == "front" {
+			payload["system"] = append([]map[string]any{part}, systemList...)
+		} else {
+			payload["system"] = append(systemList, part)
+		}
+		return
+	}
+
+	payload["system"] = text
+}
+
+func appendSystemPromptToGemini(payload map[string]any, text, mode string) {
+	if instruction, ok := payload["systemInstruction"].(map[string]any); ok {
+		if parts := toMapSlice(instruction["parts"]); len(parts) > 0 {
+			part := map[string]any{"text": text}
+			if mode == "front" {
+				instruction["parts"] = append([]map[string]any{part}, parts...)
+			} else {
+				instruction["parts"] = append(parts, part)
+			}
+			payload["systemInstruction"] = instruction
+			return
+		}
+		if existing, ok := instruction["text"].(string); ok && strings.TrimSpace(existing) != "" {
+			instruction["text"] = combineSystemPrompt(existing, text, mode)
+			payload["systemInstruction"] = instruction
+			return
+		}
+	}
+
+	payload["systemInstruction"] = map[string]any{
+		"parts": []map[string]any{{"text": text}},
+	}
+}
+
+func combineSystemPrompt(base, extra, mode string) string {
+	extra = strings.TrimSpace(extra)
+	if extra == "" {
+		return base
+	}
+
+	base = strings.TrimSpace(base)
+	if base == "" {
+		return extra
+	}
+
+	separator := "\n\n"
+	if mode == "front" {
+		return extra + separator + base
+	}
+	return base + separator + extra
+}
+
+func normalizeSystemPromptMode(mode string) string {
+	switch strings.ToLower(strings.TrimSpace(mode)) {
+	case "front", "start", "prefix", "prepend", "begin", "head", "before":
+		return "front"
+	default:
+		return "end"
+	}
+}
+
+func toMapSlice(value any) []map[string]any {
+	switch v := value.(type) {
+	case []map[string]any:
+		return v
+	case []any:
+		result := make([]map[string]any, 0, len(v))
+		for _, item := range v {
+			if m, ok := item.(map[string]any); ok {
+				result = append(result, m)
+			}
+		}
+		if len(result) > 0 {
+			return result
+		}
+	default:
+		rv := reflect.ValueOf(value)
+		if rv.IsValid() && rv.Kind() == reflect.Slice {
+			result := make([]map[string]any, 0, rv.Len())
+			for i := 0; i < rv.Len(); i++ {
+				if m, ok := rv.Index(i).Interface().(map[string]any); ok {
+					result = append(result, m)
+				}
+			}
+			if len(result) > 0 {
+				return result
+			}
+		}
+	}
+	return nil
 }

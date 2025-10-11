@@ -45,6 +45,8 @@ type SystemSettings struct {
 	MaxTokens             int    `json:"max_tokens" default:"0" name:"config.max_tokens" category:"config.category.request" desc:"config.max_tokens_desc" validate:"min=0"`
 	UseOpenAICompat       bool   `json:"use_openai_compat" default:"false" name:"config.use_openai_compat" category:"config.category.request" desc:"config.use_openai_compat_desc"`
 	ForceStreaming        bool   `json:"force_streaming" default:"false" name:"config.force_streaming" category:"config.category.request" desc:"config.force_streaming_desc"`
+	SystemPromptAppendText string `json:"system_prompt_append_text" default:"" name:"config.system_prompt_append_text" category:"config.category.request" desc:"config.system_prompt_append_text_desc"`
+	SystemPromptAppendMode string `json:"system_prompt_append_mode" default:"end" name:"config.system_prompt_append_mode" category:"config.category.request" desc:"config.system_prompt_append_mode_desc"`
 
 	// 密钥配置
 	MaxRetries                   int `json:"max_retries" default:"3" name:"config.max_retries" category:"config.category.key" desc:"config.max_retries_desc" validate:"required,min=0"`

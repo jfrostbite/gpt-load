@@ -172,6 +172,10 @@ var MessagesEnUS = map[string]string{
 	"config.use_openai_compat_desc":    "When enabled, sets max_completion_tokens instead of max_tokens for OpenAI-compatible APIs.",
 	"config.force_streaming":           "Force streaming",
 	"config.force_streaming_desc":      "Force all requests to use streaming mode by setting stream: true.",
+	"config.system_prompt_append_text":     "System prompt append text",
+	"config.system_prompt_append_text_desc": "Custom instructions appended to the system prompt for every request. Leave empty to disable.",
+	"config.system_prompt_append_mode":     "System prompt append position",
+	"config.system_prompt_append_mode_desc": "Where to place the appended text. Use 'front' to prepend or 'end' to append.",
 
 	// Key config related
 	"config.max_retries":                     "Max Retries",

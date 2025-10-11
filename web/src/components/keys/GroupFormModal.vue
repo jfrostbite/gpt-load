@@ -107,6 +107,11 @@ const streamAdapterOptions = ref([
   { label: "OpenAI", value: "openai" },
 ]);
 
+const systemPromptModeOptions = computed(() => [
+  { label: t("keys.systemPromptModeFront"), value: "front" },
+  { label: t("keys.systemPromptModeEnd"), value: "end" },
+]);
+
 // 跟踪用户是否已手动修改过字段（仅在新增模式下使用）
 const userModifiedFields = ref({
   test_model: false,
@@ -480,7 +485,10 @@ async function handleSubmit() {
         if (option && typeof option.default_value === "number" && typeof item.value === "string") {
           const numValue = Number(item.value);
           config[item.key] = isNaN(numValue) ? 0 : numValue;
-        } else if (item.key === "stream_adapter" && ((item as any).value === null || (item as any).value === undefined)) {
+        } else if (
+          item.key === "stream_adapter" &&
+          ((item as any).value === null || (item as any).value === undefined)
+        ) {
           config[item.key] = "";
         } else {
           config[item.key] = item.value as any;
@@ -892,6 +900,12 @@ async function handleSubmit() {
                               v-model:value="(configItem as any).value"
                               :options="streamAdapterOptions"
                               clearable
+                              :placeholder="t('keys.paramValue')"
+                            />
+                            <n-select
+                              v-else-if="configItem.key === 'system_prompt_append_mode'"
+                              v-model:value="(configItem as any).value"
+                              :options="systemPromptModeOptions"
                               :placeholder="t('keys.paramValue')"
                             />
                             <n-input

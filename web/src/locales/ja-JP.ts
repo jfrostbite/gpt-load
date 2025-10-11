@@ -289,6 +289,8 @@ export default {
     customHeaders: "カスタムヘッダー",
     emptyValue: "(空)",
     paramOverrides: "パラメーターオーバーライド",
+    systemPromptModeFront: "システムプロンプトの先頭に追加",
+    systemPromptModeEnd: "システムプロンプトの末尾に追加",
     enterModelName: "モデル名を入力してください",
     enterUpstreamUrl: "アップストリームURLを入力してください",
     enterValidationPath: "検証エンドポイントパスを入力してください",

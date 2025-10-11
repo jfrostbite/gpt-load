@@ -12,13 +12,14 @@ import {
   NIcon,
   NInput,
   NInputNumber,
+  NSelect,
   NSpace,
   NSwitch,
   NTooltip,
   useMessage,
   type FormItemRule,
 } from "naive-ui";
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import { useI18n } from "vue-i18n";
 
 const { t } = useI18n();
@@ -28,6 +29,11 @@ const formRef = ref();
 const form = ref<Record<string, string | number | boolean>>({});
 const isSaving = ref(false);
 const message = useMessage();
+
+const systemPromptModeOptions = computed(() => [
+  { label: t("keys.systemPromptModeFront"), value: "front" },
+  { label: t("keys.systemPromptModeEnd"), value: "end" },
+]);
 
 fetchSettings();
 
@@ -154,6 +160,12 @@ function generateValidationRules(item: Setting): FormItemRule[] {
                   v-else-if="item.key === 'proxy_keys'"
                   v-model="form[item.key] as string"
                   :placeholder="t('settings.inputContent')"
+                  size="small"
+                />
+                <n-select
+                  v-else-if="item.key === 'system_prompt_append_mode'"
+                  v-model:value="form[item.key] as string"
+                  :options="systemPromptModeOptions"
                   size="small"
                 />
                 <n-input

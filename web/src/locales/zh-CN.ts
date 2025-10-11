@@ -285,6 +285,8 @@ export default {
     customHeaders: "自定义请求头",
     emptyValue: "(空值)",
     paramOverrides: "参数覆盖",
+    systemPromptModeFront: "追加到 System Prompt 开头",
+    systemPromptModeEnd: "追加到 System Prompt 末尾",
     enterModelName: "请输入模型名称",
     enterUpstreamUrl: "请输入上游地址",
     enterValidationPath: "请输入验证端点路径",
@@ -503,7 +505,8 @@ export default {
     enableDebugMode: "启用调试模式",
     proxyUrl: "代理服务器地址",
     upstreamUserAgent: "上游 User-Agent",
-    upstreamUserAgentDesc: "自定义转发到上游时使用的 User-Agent。留空则使用默认值；可在分组配置中单独覆盖。",
+    upstreamUserAgentDesc:
+      "自定义转发到上游时使用的 User-Agent。留空则使用默认值；可在分组配置中单独覆盖。",
     corsEnabled: "启用CORS",
     allowedOrigins: "允许的源",
     allowedMethods: "允许的方法",

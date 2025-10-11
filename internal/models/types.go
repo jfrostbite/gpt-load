@@ -50,6 +50,8 @@ type GroupConfig struct {
 	MaxTokens                    *int    `json:"max_tokens,omitempty"`
 	UseOpenAICompat              *bool   `json:"use_openai_compat,omitempty"`
 	ForceStreaming               *bool   `json:"force_streaming,omitempty"`
+	SystemPromptAppendText       *string `json:"system_prompt_append_text,omitempty"`
+	SystemPromptAppendMode       *string `json:"system_prompt_append_mode,omitempty"`
 }
 
 // HeaderRule defines a single rule for header manipulation.

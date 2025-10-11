@@ -172,6 +172,10 @@ var MessagesJaJP = map[string]string{
 	"config.use_openai_compat_desc":    "有効にすると、OpenAI互換APIで max_tokens の代わりに max_completion_tokens を設定します。",
 	"config.force_streaming":           "強制ストリーミング",
 	"config.force_streaming_desc":      "stream: true を設定して、すべてのリクエストをストリーミングモードで強制します。",
+	"config.system_prompt_append_text":     "システムプロンプト追記テキスト",
+	"config.system_prompt_append_text_desc": "すべてのリクエストのシステムプロンプトに追加するカスタムテキスト。空欄で無効になります。",
+	"config.system_prompt_append_mode":     "システムプロンプト追記位置",
+	"config.system_prompt_append_mode_desc": "追記する位置を指定します。\"front\" は先頭、\"end\" は末尾に追加します。",
 
 	// Key config related
 	"config.max_retries":                     "最大リトライ数",
