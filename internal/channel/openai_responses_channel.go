@@ -89,13 +89,21 @@ func (ch *OpenAIResponsesChannel) ValidateKey(ctx context.Context, apiKey *model
 		return false, fmt.Errorf("no upstream URL configured for channel %s", ch.Name)
 	}
 
-	validationEndpoint := ch.ValidationEndpoint
-	if validationEndpoint == "" {
-		validationEndpoint = "/v1/responses"
-	}
-	reqURL, err := url.JoinPath(upstreamURL.String(), validationEndpoint)
-	if err != nil {
-		return false, fmt.Errorf("failed to join upstream URL and validation endpoint: %w", err)
+	var reqURL string
+	var err error
+
+	// Special case: if ValidationEndpoint is "#", use upstream URL directly
+	if ch.ValidationEndpoint == "#" {
+		reqURL = upstreamURL.String()
+	} else {
+		validationEndpoint := ch.ValidationEndpoint
+		if validationEndpoint == "" {
+			validationEndpoint = "/v1/responses"
+		}
+		reqURL, err = url.JoinPath(upstreamURL.String(), validationEndpoint)
+		if err != nil {
+			return false, fmt.Errorf("failed to join upstream URL and validation endpoint: %w", err)
+		}
 	}
 
 	payload := gin.H{

@@ -102,12 +102,20 @@ func (ch *GeminiChannel) ValidateKey(ctx context.Context, apiKey *models.APIKey,
 		return false, fmt.Errorf("no upstream URL configured for channel %s", ch.Name)
 	}
 
-	// Safely join the path segments
-	reqURL, err := url.JoinPath(upstreamURL.String(), "v1beta", "models", ch.TestModel+":generateContent")
-	if err != nil {
-		return false, fmt.Errorf("failed to create gemini validation path: %w", err)
+	var reqURL string
+	var err error
+
+	// Special case: if ValidationEndpoint is "#", use upstream URL directly
+	if ch.ValidationEndpoint == "#" {
+		reqURL = upstreamURL.String()
+	} else {
+		// Safely join the path segments
+		reqURL, err = url.JoinPath(upstreamURL.String(), "v1beta", "models", ch.TestModel+":generateContent")
+		if err != nil {
+			return false, fmt.Errorf("failed to create gemini validation path: %w", err)
+		}
+		reqURL += "?key=" + apiKey.KeyValue
 	}
-	reqURL += "?key=" + apiKey.KeyValue
 
 	payload := gin.H{
 		"contents": []gin.H{

@@ -926,6 +926,10 @@ func isValidValidationEndpoint(endpoint string) bool {
 	if endpoint == "" {
 		return true
 	}
+	// Special case: "#" means use upstream address directly without any endpoint
+	if endpoint == "#" {
+		return true
+	}
 	if !strings.HasPrefix(endpoint, "/") {
 		return false
 	}

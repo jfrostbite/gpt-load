@@ -80,9 +80,17 @@ func (ch *AnthropicChannel) ValidateKey(ctx context.Context, apiKey *models.APIK
 		return false, fmt.Errorf("no upstream URL configured for channel %s", ch.Name)
 	}
 
-	reqURL, err := url.JoinPath(upstreamURL.String(), ch.ValidationEndpoint)
-	if err != nil {
-		return false, fmt.Errorf("failed to join upstream URL and validation endpoint: %w", err)
+	var reqURL string
+	var err error
+
+	// Special case: if ValidationEndpoint is "#", use upstream URL directly
+	if ch.ValidationEndpoint == "#" {
+		reqURL = upstreamURL.String()
+	} else {
+		reqURL, err = url.JoinPath(upstreamURL.String(), ch.ValidationEndpoint)
+		if err != nil {
+			return false, fmt.Errorf("failed to join upstream URL and validation endpoint: %w", err)
+		}
 	}
 
 	// Use a minimal, low-cost payload for validation

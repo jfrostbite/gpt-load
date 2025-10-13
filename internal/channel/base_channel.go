@@ -74,6 +74,14 @@ func (b *BaseChannel) BuildUpstreamURL(originalURL *url.URL, groupName string) (
 		return "", fmt.Errorf("no upstream URL configured for channel %s", b.Name)
 	}
 
+	// Special case: if ValidationEndpoint is "#", use upstream URL directly
+	// and ignore the downstream endpoint path
+	if b.ValidationEndpoint == "#" {
+		finalURL := *base
+		finalURL.RawQuery = originalURL.RawQuery
+		return finalURL.String(), nil
+	}
+
 	finalURL := *base
 	proxyPrefix := "/proxy/" + groupName
 	requestPath := originalURL.Path
